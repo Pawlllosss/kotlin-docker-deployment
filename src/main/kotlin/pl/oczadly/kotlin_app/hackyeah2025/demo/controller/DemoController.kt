@@ -12,8 +12,8 @@ class DemoController() {
     @GetMapping("/demos")
     fun getDemos(): List<String> = listOf("demo-values")
 
-    @GetMapping("/demos2")
-    fun getDemos2(): String = "new-demo-2"
+    @GetMapping("/demos3")
+    fun getDemos2(): String = "new-demo-3"
 
     @PutMapping("/dynamo-db/{email}")
     fun addEmail(@PathVariable(name = "email") email: String) = email
