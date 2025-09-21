@@ -74,7 +74,7 @@ jobs:
         with:
           task-definition: aws/TaskDefinition.json
           container-name: kotlin-be
-          image: ${{ secrets.REPOSITORY_IMAGE }}:{{ needs.build-and-push.outputs.build_number }}
+          image: ${{ secrets.REPOSITORY_IMAGE }}:${{ needs.build-and-push.outputs.build_number }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
