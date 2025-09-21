@@ -64,7 +64,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: aws/TaskDefinition.json
-          container-name: hackyeah2025-be
+          container-name: kotlin-be
           image: ${{ secrets.REPOSITORY_IMAGE }}:latest
 
       - name: Deploy Amazon ECS task definition
