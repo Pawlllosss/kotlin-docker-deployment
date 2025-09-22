@@ -40,6 +40,7 @@
   "cpu": "512",
   "enableFaultInjection": false,
   "executionRoleArn": "arn:aws:iam::242422306324:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::242422306324:role/hackyeah-2025-kotlin-be-task-role",
   "family": "hackyeah-2025-kotlin-be",
   "memory": "1024",
   "networkMode": "awsvpc",
