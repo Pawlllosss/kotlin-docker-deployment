@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-class DemoController() {
+class DemoController(private val apiCallDemo: ApiCallDemo) {
 
     @GetMapping("/demos")
     fun getDemos(): List<String> = listOf("demo-values")
 
     @GetMapping("/demos3")
     fun getDemos2(): String = "new-demo-3"
+
+    @GetMapping("/demo-api-call")
+    fun apiCallDemo(): String? = apiCallDemo.makeDemoApiCall()
 
     @PutMapping("/dynamo-db/{email}")
     fun addEmail(@PathVariable(name = "email") email: String) = email
