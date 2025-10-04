@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.oczadly.kotlin_app.hackyeah2025.pension.entity.PensionCalculationAuditingRepository;
 import pl.oczadly.kotlin_app.hackyeah2025.pension.model.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,13 +20,16 @@ class PensionCalculatorServiceTest {
     @Mock
     private ForecastDataService forecastDataService;
 
+    @Mock
+    private PensionCalculationAuditingRepository auditingRepository;
+
     @InjectMocks
     private PensionCalculatorService pensionCalculatorService;
 
     @BeforeEach
     void setUp() {
         when(forecastDataService.getWageGrowth(anyInt())).thenReturn(0.03);
-        when(forecastDataService.getLifeExpectancy(anyInt(), anyString())).thenReturn(20.0);
+        when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenReturn(20.0 * 12);
         when(forecastDataService.getAveragePension(anyInt())).thenReturn(3500.0);
         when(forecastDataService.getCumulativeInflation(anyInt(), anyInt())).thenReturn(1.5);
     }
@@ -41,7 +45,8 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
-                null
+                null,
+                5000.0
         );
 
         // when
@@ -66,7 +71,8 @@ class PensionCalculatorServiceTest {
                 2065,
                 true,
                 null,
-                null
+                null,
+                5000.0
         );
 
         // when
@@ -90,7 +96,8 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
-                null
+                null,
+                5000.0
         );
 
         // when
@@ -114,7 +121,8 @@ class PensionCalculatorServiceTest {
                 2065,
                 true,
                 null,
-                null
+                null,
+                5000.0
         );
 
         PensionRequest femaleRequest = new PensionRequest(
@@ -125,7 +133,8 @@ class PensionCalculatorServiceTest {
                 2065,
                 true,
                 null,
-                null
+                null,
+                5000.0
         );
 
         // when
@@ -147,6 +156,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 100000.0,
                 null
         );
@@ -158,6 +168,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 null,
                 null
         );
@@ -182,6 +193,7 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
+                null,
                 null
         );
 
@@ -204,6 +216,7 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
+                null,
                 null
         );
 
@@ -225,6 +238,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 null,
                 null
         );
@@ -260,6 +274,7 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
+                null,
                 10000.0
         );
 
@@ -283,6 +298,7 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
+                null,
                 null
         );
 
@@ -305,6 +321,7 @@ class PensionCalculatorServiceTest {
                 2065,
                 false,
                 null,
+                null,
                 1000.0    // Low expected pension
         );
 
@@ -326,6 +343,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2030,  // Short period for easier verification
                 false,
+                null,
                 0.0,
                 null
         );
@@ -356,6 +374,7 @@ class PensionCalculatorServiceTest {
                 2030,
                 false,
                 null,
+                null,
                 null
         );
 
@@ -379,6 +398,7 @@ class PensionCalculatorServiceTest {
                 2070,
                 false,
                 null,
+                null,
                 null
         );
 
@@ -401,6 +421,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 null,
                 null
         );
@@ -430,6 +451,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 1000.0,  // Only account balance
                 null
         );
@@ -446,9 +468,9 @@ class PensionCalculatorServiceTest {
     @Test
     void shouldUseCorrectLifeExpectancyForDifferentGenders() {
         // given
-        when(forecastDataService.getLifeExpectancy(anyInt(), anyString())).thenAnswer(invocation -> {
+        when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenAnswer(invocation -> {
             String sex = invocation.getArgument(1);
-            return sex.equalsIgnoreCase("male") ? 19.0 : 24.0;
+            return sex.equalsIgnoreCase("male") ? 19.0 * 12 : 24.0 * 12;
         });
 
         PensionRequest maleRequest = new PensionRequest(
@@ -458,6 +480,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 100000.0,
                 null
         );
@@ -469,6 +492,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 false,
+                null,
                 100000.0,
                 null
         );

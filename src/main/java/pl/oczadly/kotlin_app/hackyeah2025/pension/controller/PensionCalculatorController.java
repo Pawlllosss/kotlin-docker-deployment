@@ -7,7 +7,7 @@ import pl.oczadly.kotlin_app.hackyeah2025.pension.model.PensionResponse;
 import pl.oczadly.kotlin_app.hackyeah2025.pension.service.PensionCalculatorService;
 
 @RestController
-@RequestMapping("/api/pension")
+@RequestMapping("/pension")
 @RequiredArgsConstructor
 public class PensionCalculatorController {
 
