@@ -30,7 +30,7 @@ class PensionCalculatorServiceTest {
     void setUp() {
         when(forecastDataService.getWageGrowth(anyInt())).thenReturn(0.03);
         when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenReturn(20.0 * 12);
-        when(forecastDataService.getAveragePension(anyInt())).thenReturn(3500.0);
+        when(forecastDataService.getAveragePension(anyInt(), anyString())).thenReturn(3500.0);
         when(forecastDataService.getCumulativeInflation(anyInt(), anyInt())).thenReturn(1.5);
     }
 
@@ -39,7 +39,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -65,7 +65,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -90,7 +90,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -115,7 +115,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest maleRequest = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -127,7 +127,7 @@ class PensionCalculatorServiceTest {
 
         PensionRequest femaleRequest = new PensionRequest(
                 30,
-                "female",
+                "F",
                 5000.0,
                 2025,
                 2065,
@@ -141,9 +141,9 @@ class PensionCalculatorServiceTest {
         PensionResponse maleResponse = pensionCalculatorService.calculatePension(maleRequest);
         PensionResponse femaleResponse = pensionCalculatorService.calculatePension(femaleRequest);
 
-        // then - female should have lower pension due to more sick days (14 vs 10)
-        assertThat(femaleResponse.nominalPension().withSickLeave())
-                .isLessThan(maleResponse.nominalPension().withSickLeave());
+        // then - male should have lower pension due to more sick days (35 vs 32)
+        assertThat(maleResponse.nominalPension().withSickLeave())
+                .isLessThan(femaleResponse.nominalPension().withSickLeave());
     }
 
     @Test
@@ -151,7 +151,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest requestWithBalance = new PensionRequest(
                 40,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -163,7 +163,7 @@ class PensionCalculatorServiceTest {
 
         PensionRequest requestWithoutBalance = new PensionRequest(
                 40,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -187,7 +187,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -210,7 +210,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -233,7 +233,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -268,7 +268,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -292,7 +292,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -315,7 +315,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 50000.0,  // High salary
                 2025,
                 2065,
@@ -338,7 +338,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2030,  // Short period for easier verification
@@ -368,7 +368,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 60,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2030,
@@ -392,7 +392,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 20,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2070,
@@ -416,7 +416,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -446,7 +446,7 @@ class PensionCalculatorServiceTest {
         // given
         PensionRequest request = new PensionRequest(
                 30,
-                "male",
+                "M",
                 0.0,
                 2025,
                 2065,
@@ -470,12 +470,12 @@ class PensionCalculatorServiceTest {
         // given
         when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenAnswer(invocation -> {
             String sex = invocation.getArgument(1);
-            return sex.equalsIgnoreCase("male") ? 19.0 * 12 : 24.0 * 12;
+            return sex.equalsIgnoreCase("M") ? 19.0 * 12 : 24.0 * 12;
         });
 
         PensionRequest maleRequest = new PensionRequest(
                 30,
-                "male",
+                "M",
                 5000.0,
                 2025,
                 2065,
@@ -487,7 +487,7 @@ class PensionCalculatorServiceTest {
 
         PensionRequest femaleRequest = new PensionRequest(
                 30,
-                "female",
+                "F",
                 5000.0,
                 2025,
                 2065,

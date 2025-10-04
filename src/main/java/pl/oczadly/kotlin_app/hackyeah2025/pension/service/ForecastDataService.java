@@ -10,10 +10,10 @@ public class ForecastDataService {
 
     private static final Map<Integer, Double> WAGE_GROWTH = new HashMap<>();
     private static final Map<Integer, Double> INFLATION_RATE = new HashMap<>();
-    private static final Map<Integer, Double> AVG_PENSION = new HashMap<>();
+    private static final Map<Integer, Map<String, Double>> AVG_PENSION = new HashMap<>();
     private static final Map<String, Double> LIFE_EXPECTANCY_AFTER_RETIREMENT = Map.of(
-            "male", 19.0,
-            "female", 24.0
+            "M", 19.0,
+            "F", 24.0
     );
 
     static {
@@ -29,7 +29,7 @@ public class ForecastDataService {
 
         // Initialize with sample data - average pension (simplified, constant value)
         for (var year = 2025; year <= 2100; year++) {
-            AVG_PENSION.put(year, 3500.0);
+            AVG_PENSION.put(year, Map.of("M", 4000.0, "F", 3000.0));
         }
 
     }
@@ -42,8 +42,8 @@ public class ForecastDataService {
         return INFLATION_RATE.getOrDefault(year, 0.025);
     }
 
-    public double getAveragePension(int year) {
-        return AVG_PENSION.getOrDefault(year, 3500.0);
+    public double getAveragePension(int year, String sex) {
+        return AVG_PENSION.get(year).get(sex);
     }
 
     public double getLifeExpectancyMonths(int year, String sex) {

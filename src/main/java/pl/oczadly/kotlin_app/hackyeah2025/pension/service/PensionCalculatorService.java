@@ -15,8 +15,8 @@ public class PensionCalculatorService {
 
     private static final double CONTRIBUTION_RATE = 0.1976;
     private static final double SICK_LEAVE_REDUCTION = 0.2;
-    private static final int AVG_SICK_DAYS_MALE = 10;
-    private static final int AVG_SICK_DAYS_FEMALE = 14;
+    private static final int AVG_SICK_DAYS_MALE = 35;
+    private static final int AVG_SICK_DAYS_FEMALE = 32;
 
     private final ForecastDataService forecastDataService;
     private final PensionCalculationAuditingRepository pensionCalculationRepository;
@@ -55,7 +55,7 @@ public class PensionCalculatorService {
         var finalSalary = calculateFinalSalary(request);
         var nominalReplacementRate = (nominalPensionWithSickLeave / finalSalary) * 100;
 
-        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear());
+        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear(), request.sex());
 
         var nominalVsAverage = (nominalPensionWithSickLeave / avgPensionAtRetirement) * 100;
         List<DelayedScenario> nominalDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, false);
@@ -92,7 +92,7 @@ public class PensionCalculatorService {
         var finalSalary = calculateFinalSalary(request);
         var realReplacementRate = (realPensionWithSickLeave / (finalSalary / cumulativeInflation)) * 100;
 
-        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear());
+        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear(), request.sex());
         var realVsAverage = (realPensionWithSickLeave / (avgPensionAtRetirement / cumulativeInflation)) * 100;
 
         var realDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, true);
@@ -118,7 +118,7 @@ public class PensionCalculatorService {
         var balance = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
         var currentSalary = request.grossSalary();
 
-        var avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
+        var avgSickDays = request.sex().equalsIgnoreCase("M") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
         var workDaysInYear = 250.0; // Approximate working days
 
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
@@ -217,7 +217,7 @@ public class PensionCalculatorService {
         var balanceNominal = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
         var currentSalary = request.grossSalary();
 
-        var avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
+        var avgSickDays = request.sex().equalsIgnoreCase("M") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
         var workDaysInYear = 250.0;
 
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
