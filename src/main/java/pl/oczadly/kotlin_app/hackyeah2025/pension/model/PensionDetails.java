@@ -10,6 +10,7 @@ public record PensionDetails(
     double withoutSickLeave,
     double replacementRate,
     double vsAveragePension,
+    double finalSalary,
     List<DelayedScenario> delayedScenarios,
     Integer extraYearsNeededForExpected
 ) {}
