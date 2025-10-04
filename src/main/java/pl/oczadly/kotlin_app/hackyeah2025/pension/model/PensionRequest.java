@@ -10,5 +10,4 @@ public record PensionRequest(
     Integer averageSickDaysPerYear,
     Double currentAccountBalance,
     Double expectedPension,
-    String zipCode
-) {}
+    String zipCode) {}
