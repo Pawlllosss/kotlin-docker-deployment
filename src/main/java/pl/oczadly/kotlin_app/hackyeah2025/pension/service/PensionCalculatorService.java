@@ -12,7 +12,7 @@ import java.util.List;
 public class PensionCalculatorService {
 
     private static final double CONTRIBUTION_RATE = 0.1976;
-    private static final double SICK_LEAVE_REDUCTION = 0.25;
+    private static final double SICK_LEAVE_REDUCTION = 0.2;
     private static final int AVG_SICK_DAYS_MALE = 10;
     private static final int AVG_SICK_DAYS_FEMALE = 14;
 
