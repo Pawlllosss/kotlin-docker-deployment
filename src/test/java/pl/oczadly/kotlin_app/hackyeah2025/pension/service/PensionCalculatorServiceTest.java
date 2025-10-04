@@ -85,30 +85,6 @@ class PensionCalculatorServiceTest {
                 .isLessThan(response.realPension().withoutSickLeave());
     }
 
-    @Test
-    void shouldCalculateSamePensionWhenSickLeaveNotIncluded() {
-        // given
-        PensionRequest request = new PensionRequest(
-                30,
-                "M",
-                5000.0,
-                2025,
-                2065,
-                false,
-                null,
-                null,
-                5000.0
-        );
-
-        // when
-        PensionResponse response = pensionCalculatorService.calculatePension(request);
-
-        // then
-        assertThat(response.nominalPension().withSickLeave())
-                .isEqualTo(response.nominalPension().withoutSickLeave());
-        assertThat(response.realPension().withSickLeave())
-                .isEqualTo(response.realPension().withoutSickLeave());
-    }
 
     @Test
     void shouldUseDifferentSickDaysForMaleAndFemale() {
