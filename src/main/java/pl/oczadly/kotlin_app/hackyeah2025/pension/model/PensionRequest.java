@@ -6,7 +6,7 @@ public record PensionRequest(
     Double grossSalary,
     Integer startYear,
     Integer retirementYear,
-    Boolean includeSickLeave,
+    boolean includeSickLeave,
     Integer averageSickDaysPerYear,
     Double currentAccountBalance,
     Double expectedPension

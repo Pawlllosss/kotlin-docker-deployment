@@ -124,7 +124,7 @@ public class PensionCalculatorService {
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
             var yearlyContribution = currentSalary * CONTRIBUTION_RATE;
 
-            if (includeSickLeave && request.includeSickLeave()) {
+            if (includeSickLeave) {
                 var sickLeaveDaysFraction = avgSickDays / workDaysInYear;
                 var sickLeaveReduction = yearlyContribution * sickLeaveDaysFraction * SICK_LEAVE_REDUCTION;
                 yearlyContribution -= sickLeaveReduction;
