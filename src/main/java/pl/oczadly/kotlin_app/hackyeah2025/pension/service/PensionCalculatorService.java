@@ -93,7 +93,7 @@ public class PensionCalculatorService {
         var realReplacementRate = (realPensionWithoutSickLeave / finalSalary ) * 100;
 
         var avgPensionAtRetirement = forecastDataService.getAveragePensionAfterValorization(request.retirementYear(), request.sex()) / cumulativeInflation;
-        var realVsAverage = (realPensionWithSickLeave / (avgPensionAtRetirement / cumulativeInflation)) * 100;
+        var realVsAverage = (realPensionWithSickLeave / avgPensionAtRetirement) * 100;
 
         var accountBalanceWithoutSickLeave = calculateAccountBalance(request, false);
         var realDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithoutSickLeave, true);
@@ -179,7 +179,7 @@ public class PensionCalculatorService {
         var salary = calculateIndexedSalary(request);
 
         for (var year = request.retirementYear(); year < request.retirementYear() + delayYears; year++) {
-            balance += salary * CONTRIBUTION_RATE;
+            balance += salary * 12 * CONTRIBUTION_RATE;
             salary *= (forecastDataService.getWageGrowth(year));
         }
 
@@ -215,7 +215,8 @@ public class PensionCalculatorService {
             return 0; // Already meets expectations
         }
 
-        for(int extraYears = 1 ; ; extraYears++) {
+        // Limit to max 400 extra years to prevent infinite loop
+        for(int extraYears = 1; extraYears <= 400; extraYears++) {
             var delayedPension = calculatePensionForBalance(
                     calculateAccountBalance(request, true),
                     request,
@@ -229,6 +230,8 @@ public class PensionCalculatorService {
             }
         }
 
+        // Expected pension is unreachable within 40 years
+        return -1;
     }
 
     private List<AccountProgression> buildAccountProgression(PensionRequest request) {
@@ -240,7 +243,10 @@ public class PensionCalculatorService {
         var workDaysInYear = 250.0;
 
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
-            var yearlyContribution = currentSalary * CONTRIBUTION_RATE;
+            Double valorizationRate = forecastDataService.getValorizationRate(year);
+            balanceNominal *= valorizationRate;
+
+            var yearlyContribution = currentSalary * 12 * CONTRIBUTION_RATE;
 
             if (request.includeSickLeave()) {
                 var sickLeaveDaysFraction = avgSickDays / workDaysInYear;
