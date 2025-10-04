@@ -6,6 +6,9 @@ import pl.oczadly.kotlin_app.hackyeah2025.pension.entity.PensionCalculationAudit
 import pl.oczadly.kotlin_app.hackyeah2025.pension.entity.PensionCalculationAuditingRepository;
 import pl.oczadly.kotlin_app.hackyeah2025.pension.model.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +42,7 @@ public class PensionCalculatorService {
           .realPension(realDetails)
           .accountProgression(accountProgression)
           .build();
-        pensionCalculationRepository.save(new PensionCalculationAuditing(request, response));
+        pensionCalculationRepository.save(new PensionCalculationAuditing(ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toLocalDateTime(),request, response));
         return response;
     }
 
