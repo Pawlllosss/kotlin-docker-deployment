@@ -193,7 +193,6 @@ public class PensionCalculatorService {
         double pension = balance / delayedLifeExpectancy;
 
         if (calculateRealOutcome) {
-            // TODO include wage growth
             var cumulativeInflation = forecastDataService.getCumulativeInflation(request.startYear(), retirementYear);
             pension = pension / cumulativeInflation;
         }

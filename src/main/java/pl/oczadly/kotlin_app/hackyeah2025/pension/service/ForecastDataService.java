@@ -28,9 +28,7 @@ public class ForecastDataService {
         initializeInflationRate();
         initializeValorizationRate();
 
-        // Initialize with sample data - average pension (simplified, constant value)
         for (var year = 2025; year <= 2100; year++) {
-            // TODO: use wage growth for calculation
             averagePension.put(year, Map.of("M", 4000.0, "F", 3000.0));
         }
 
