@@ -11,5 +11,5 @@ public record PensionDetails(
     double replacementRate,
     double vsAveragePension,
     List<DelayedScenario> delayedScenarios,
-    Double salaryNeededForExpected
+    Integer extraYearsNeededForExpected
 ) {}

@@ -240,7 +240,7 @@ class PensionCalculatorServiceTest {
     }
 
     @Test
-    void shouldCalculateSalaryNeededForExpectedPension() {
+    void shouldCalculateYearsNeededForExpectedPension() {
         // given
         PensionRequest request = new PensionRequest(
                 30,
@@ -258,9 +258,9 @@ class PensionCalculatorServiceTest {
         PensionResponse response = pensionCalculatorService.calculatePension(request);
 
         // then
-        assertThat(response.nominalPension().salaryNeededForExpected()).isNotNull();
-        assertThat(response.nominalPension().salaryNeededForExpected()).isGreaterThan(request.grossSalary());
-        assertThat(response.realPension().salaryNeededForExpected()).isNotNull();
+        assertThat(response.nominalPension().extraYearsNeededForExpected()).isNotNull();
+        assertThat(response.nominalPension().extraYearsNeededForExpected()).isGreaterThan(0);
+        assertThat(response.realPension().extraYearsNeededForExpected()).isNotNull();
     }
 
     @Test
@@ -282,8 +282,8 @@ class PensionCalculatorServiceTest {
         PensionResponse response = pensionCalculatorService.calculatePension(request);
 
         // then
-        assertThat(response.nominalPension().salaryNeededForExpected()).isNull();
-        assertThat(response.realPension().salaryNeededForExpected()).isNull();
+        assertThat(response.nominalPension().extraYearsNeededForExpected()).isNull();
+        assertThat(response.realPension().extraYearsNeededForExpected()).isNull();
     }
 
     @Test
@@ -305,8 +305,8 @@ class PensionCalculatorServiceTest {
         PensionResponse response = pensionCalculatorService.calculatePension(request);
 
         // then
-        assertThat(response.nominalPension().salaryNeededForExpected()).isNull();
-        assertThat(response.realPension().salaryNeededForExpected()).isNull();
+        assertThat(response.nominalPension().extraYearsNeededForExpected()).isNull();
+        assertThat(response.realPension().extraYearsNeededForExpected()).isNull();
     }
 
     @Test
