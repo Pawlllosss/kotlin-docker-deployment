@@ -196,6 +196,12 @@ public class ForecastDataService {
         return AVG_PENSION.get(year).get(sex);
     }
 
+    public double getAveragePensionAfterValorization(int year, String sex) {
+        var cumulativeValorization = getCumulativeValorization(2025, year);
+
+        return getAveragePension(year, sex) * cumulativeValorization;
+    }
+
     public Double getValorizationRate(int year) {
         return VALORIZATION_RATE.getOrDefault(year, 1.025);
     }
@@ -215,7 +221,15 @@ public class ForecastDataService {
     public double getCumulativeWageGrowth(int fromYear, int toYear) {
         var cumulative = 1.0;
         for (var year = fromYear; year < toYear; year++) {
-            cumulative *= (1 + getWageGrowth(year));
+            cumulative *= (getWageGrowth(year));
+        }
+        return cumulative;
+    }
+
+    public double getCumulativeValorization(int fromYear, int toYear) {
+        var cumulative = 1.0;
+        for (var year = fromYear; year < toYear; year++) {
+            cumulative *= (getValorizationRate(year));
         }
         return cumulative;
     }

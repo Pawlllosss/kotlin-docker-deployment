@@ -56,7 +56,7 @@ public class PensionCalculatorService {
         var finalSalary = calculateIndexedSalary(request);
         var nominalReplacementRate = (nominalPensionWithoutSickLeave / finalSalary) * 100;
 
-        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear(), request.sex());
+        var avgPensionAtRetirement = forecastDataService.getAveragePensionAfterValorization(request.retirementYear(), request.sex());
 
         var nominalVsAverage = (nominalPensionWithoutSickLeave / avgPensionAtRetirement) * 100;
         List<DelayedScenario> nominalDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, false);
@@ -71,6 +71,7 @@ public class PensionCalculatorService {
                 .withoutSickLeave(nominalPensionWithoutSickLeave)
                 .replacementRate(nominalReplacementRate)
                 .finalSalary(finalSalary)
+                .finalAveragePension(avgPensionAtRetirement)
                 .vsAveragePension(nominalVsAverage)
                 .delayedScenarios(nominalDelayedScenarios)
                 .extraYearsNeededForExpected(yearsNeededForExpected)
@@ -91,7 +92,7 @@ public class PensionCalculatorService {
         var finalSalary = calculateIndexedSalary(request) / cumulativeInflation;
         var realReplacementRate = (realPensionWithoutSickLeave / finalSalary ) * 100;
 
-        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear(), request.sex());
+        var avgPensionAtRetirement = forecastDataService.getAveragePensionAfterValorization(request.retirementYear(), request.sex()) / cumulativeInflation;
         var realVsAverage = (realPensionWithSickLeave / (avgPensionAtRetirement / cumulativeInflation)) * 100;
 
         var accountBalanceWithoutSickLeave = calculateAccountBalance(request, false);
@@ -109,6 +110,7 @@ public class PensionCalculatorService {
                 .withoutSickLeave(realPensionWithoutSickLeave)
                 .replacementRate(realReplacementRate)
                 .finalSalary(finalSalary)
+                .finalAveragePension(avgPensionAtRetirement)
                 .vsAveragePension(realVsAverage)
                 .delayedScenarios(realDelayedScenarios)
                 .extraYearsNeededForExpected(extraYearsNeededForExpected)
@@ -137,9 +139,6 @@ public class PensionCalculatorService {
 
             balance += yearlyContribution;
             currentSalary *= forecastDataService.getWageGrowth(year + 1);
-            // TODO: use it only for real
-//            // Apply wage growth for next year
-//            currentSalary *= (forecastDataService.getWageGrowth(year));
         }
 
         return balance;
