@@ -34,14 +34,13 @@ public class PensionCalculatorService {
         // Build account progression
         var accountProgression = buildAccountProgression(request);
 
-        var calculationAuditing = new PensionCalculationAuditing(request, nominalDetails, realDetails, accountProgression);
-        pensionCalculationRepository.save(calculationAuditing);
-
-        return PensionResponse.builder()
-                .nominalPension(nominalDetails)
-                .realPension(realDetails)
-                .accountProgression(accountProgression)
-                .build();
+        var response = PensionResponse.builder()
+          .nominalPension(nominalDetails)
+          .realPension(realDetails)
+          .accountProgression(accountProgression)
+          .build();
+        pensionCalculationRepository.save(new PensionCalculationAuditing(request, response));
+        return response;
     }
 
     private PensionDetails calculateNominalPension(PensionRequest request, double accountBalanceWithSickLeave, double accountBalanceWithoutSickLeave) {
