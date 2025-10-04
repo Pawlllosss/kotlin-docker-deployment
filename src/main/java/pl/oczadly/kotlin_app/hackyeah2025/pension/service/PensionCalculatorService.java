@@ -20,37 +20,37 @@ public class PensionCalculatorService {
 
     public PensionResponse calculatePension(PensionRequest request) {
         // Calculate account balances
-        double accountBalanceWithSickLeave = calculateAccountBalance(request, true);
-        double accountBalanceWithoutSickLeave = calculateAccountBalance(request, false);
+        var accountBalanceWithSickLeave = calculateAccountBalance(request, true);
+        var accountBalanceWithoutSickLeave = calculateAccountBalance(request, false);
 
         // Get life expectancy
-        double lifeExpectancyYears = forecastDataService.getLifeExpectancy(request.retirementYear(), request.sex());
-        double lifeExpectancyMonths = lifeExpectancyYears * 12;
+        var lifeExpectancyYears = forecastDataService.getLifeExpectancy(request.retirementYear(), request.sex());
+        var lifeExpectancyMonths = lifeExpectancyYears * 12;
 
         // Calculate nominal pensions
-        double nominalPensionWithSickLeave = accountBalanceWithSickLeave / lifeExpectancyMonths;
-        double nominalPensionWithoutSickLeave = accountBalanceWithoutSickLeave / lifeExpectancyMonths;
+        var nominalPensionWithSickLeave = accountBalanceWithSickLeave / lifeExpectancyMonths;
+        var nominalPensionWithoutSickLeave = accountBalanceWithoutSickLeave / lifeExpectancyMonths;
 
         // Calculate cumulative inflation from 2025 to retirement year
-        double cumulativeInflation = forecastDataService.getCumulativeInflation(2025, request.retirementYear());
+        var cumulativeInflation = forecastDataService.getCumulativeInflation(2025, request.retirementYear());
 
         // Calculate real pensions
-        double realPensionWithSickLeave = nominalPensionWithSickLeave / cumulativeInflation;
-        double realPensionWithoutSickLeave = nominalPensionWithoutSickLeave / cumulativeInflation;
+        var realPensionWithSickLeave = nominalPensionWithSickLeave / cumulativeInflation;
+        var realPensionWithoutSickLeave = nominalPensionWithoutSickLeave / cumulativeInflation;
 
         // Calculate replacement rate (pension / final salary)
-        double finalSalary = calculateFinalSalary(request);
-        double nominalReplacementRate = (nominalPensionWithSickLeave / finalSalary) * 100;
-        double realReplacementRate = (realPensionWithSickLeave / (finalSalary / cumulativeInflation)) * 100;
+        var finalSalary = calculateFinalSalary(request);
+        var nominalReplacementRate = (nominalPensionWithSickLeave / finalSalary) * 100;
+        var realReplacementRate = (realPensionWithSickLeave / (finalSalary / cumulativeInflation)) * 100;
 
         // Get average pension at retirement year
-        double avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear());
-        double nominalVsAverage = (nominalPensionWithSickLeave / avgPensionAtRetirement) * 100;
-        double realVsAverage = (realPensionWithSickLeave / (avgPensionAtRetirement / cumulativeInflation)) * 100;
+        var avgPensionAtRetirement = forecastDataService.getAveragePension(request.retirementYear());
+        var nominalVsAverage = (nominalPensionWithSickLeave / avgPensionAtRetirement) * 100;
+        var realVsAverage = (realPensionWithSickLeave / (avgPensionAtRetirement / cumulativeInflation)) * 100;
 
         // Calculate delayed scenarios
-        List<DelayedScenario> nominalDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, false);
-        List<DelayedScenario> realDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, true);
+        var nominalDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, false);
+        var realDelayedScenarios = calculateDelayedScenarios(request, accountBalanceWithSickLeave, true);
 
         // Calculate salary needed for expected pension
         Double nominalSalaryNeeded = null;
@@ -61,7 +61,7 @@ public class PensionCalculatorService {
         }
 
         // Build nominal pension details
-        PensionDetails nominalDetails = PensionDetails.builder()
+        var nominalDetails = PensionDetails.builder()
                 .withSickLeave(nominalPensionWithSickLeave)
                 .withoutSickLeave(nominalPensionWithoutSickLeave)
                 .replacementRate(nominalReplacementRate)
@@ -71,7 +71,7 @@ public class PensionCalculatorService {
                 .build();
 
         // Build real pension details
-        PensionDetails realDetails = PensionDetails.builder()
+        var realDetails = PensionDetails.builder()
                 .withSickLeave(realPensionWithSickLeave)
                 .withoutSickLeave(realPensionWithoutSickLeave)
                 .replacementRate(realReplacementRate)
@@ -81,7 +81,7 @@ public class PensionCalculatorService {
                 .build();
 
         // Build account progression
-        List<AccountProgression> accountProgression = buildAccountProgression(request);
+        var accountProgression = buildAccountProgression(request);
 
         return PensionResponse.builder()
                 .nominalPension(nominalDetails)
@@ -91,18 +91,18 @@ public class PensionCalculatorService {
     }
 
     private double calculateAccountBalance(PensionRequest request, boolean includeSickLeave) {
-        double balance = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
-        double currentSalary = request.grossSalary();
+        var balance = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
+        var currentSalary = request.grossSalary();
 
-        int avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
-        double workDaysInYear = 250.0; // Approximate working days
+        var avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
+        var workDaysInYear = 250.0; // Approximate working days
 
-        for (int year = request.startYear(); year < request.retirementYear(); year++) {
-            double yearlyContribution = currentSalary * CONTRIBUTION_RATE;
+        for (var year = request.startYear(); year < request.retirementYear(); year++) {
+            var yearlyContribution = currentSalary * CONTRIBUTION_RATE;
 
             if (includeSickLeave && request.includeSickLeave()) {
-                double sickLeaveDaysFraction = avgSickDays / workDaysInYear;
-                double sickLeaveReduction = yearlyContribution * sickLeaveDaysFraction * SICK_LEAVE_REDUCTION;
+                var sickLeaveDaysFraction = avgSickDays / workDaysInYear;
+                var sickLeaveReduction = yearlyContribution * sickLeaveDaysFraction * SICK_LEAVE_REDUCTION;
                 yearlyContribution -= sickLeaveReduction;
             }
 
@@ -116,8 +116,8 @@ public class PensionCalculatorService {
     }
 
     private double calculateFinalSalary(PensionRequest request) {
-        double salary = request.grossSalary();
-        for (int year = request.startYear(); year < request.retirementYear(); year++) {
+        var salary = request.grossSalary();
+        for (var year = request.startYear(); year < request.retirementYear(); year++) {
             salary *= (1 + forecastDataService.getWageGrowth(year));
         }
         return salary;
@@ -125,14 +125,14 @@ public class PensionCalculatorService {
 
     private List<DelayedScenario> calculateDelayedScenarios(PensionRequest request, double baseAccountBalance, boolean useRealValues) {
         List<DelayedScenario> scenarios = new ArrayList<>();
-        int[] delayYears = {1, 2, 5};
+        var delayYears = new int[]{1, 2, 5};
 
-        double basePension = calculatePensionForBalance(baseAccountBalance, request, 0, useRealValues);
+        var basePension = calculatePensionForBalance(baseAccountBalance, request, 0, useRealValues);
 
-        for (int delay : delayYears) {
-            double delayedBalance = calculateDelayedAccountBalance(request, baseAccountBalance, delay);
-            double delayedPension = calculatePensionForBalance(delayedBalance, request, delay, useRealValues);
-            double increasePct = ((delayedPension - basePension) / basePension) * 100;
+        for (var delay : delayYears) {
+            var delayedBalance = calculateDelayedAccountBalance(request, baseAccountBalance, delay);
+            var delayedPension = calculatePensionForBalance(delayedBalance, request, delay, useRealValues);
+            var increasePct = ((delayedPension - basePension) / basePension) * 100;
 
             scenarios.add(DelayedScenario.builder()
                     .years(delay)
@@ -145,10 +145,10 @@ public class PensionCalculatorService {
     }
 
     private double calculateDelayedAccountBalance(PensionRequest request, double baseBalance, int delayYears) {
-        double balance = baseBalance;
-        double salary = calculateFinalSalary(request);
+        var balance = baseBalance;
+        var salary = calculateFinalSalary(request);
 
-        for (int year = request.retirementYear(); year < request.retirementYear() + delayYears; year++) {
+        for (var year = request.retirementYear(); year < request.retirementYear() + delayYears; year++) {
             balance += salary * CONTRIBUTION_RATE;
             salary *= (1 + forecastDataService.getWageGrowth(year));
         }
@@ -157,17 +157,17 @@ public class PensionCalculatorService {
     }
 
     private double calculatePensionForBalance(double balance, PensionRequest request, int delayYears, boolean useRealValues) {
-        int retirementYear = request.retirementYear() + delayYears;
-        double lifeExpectancy = forecastDataService.getLifeExpectancy(retirementYear, request.sex());
+        var retirementYear = request.retirementYear() + delayYears;
+        var lifeExpectancy = forecastDataService.getLifeExpectancy(retirementYear, request.sex());
 
         // Reduce life expectancy by delay years
         lifeExpectancy = Math.max(1, lifeExpectancy - delayYears);
-        double lifeExpectancyMonths = lifeExpectancy * 12;
+        var lifeExpectancyMonths = lifeExpectancy * 12;
 
-        double pension = balance / lifeExpectancyMonths;
+        var pension = balance / lifeExpectancyMonths;
 
         if (useRealValues) {
-            double cumulativeInflation = forecastDataService.getCumulativeInflation(2025, retirementYear);
+            var cumulativeInflation = forecastDataService.getCumulativeInflation(2025, retirementYear);
             pension = pension / cumulativeInflation;
         }
 
@@ -175,7 +175,7 @@ public class PensionCalculatorService {
     }
 
     private Double calculateSalaryNeededForExpected(PensionRequest request, double expectedPension, boolean useRealValues) {
-        double currentPension = calculatePensionForBalance(
+        var currentPension = calculatePensionForBalance(
                 calculateAccountBalance(request, true),
                 request,
                 0,
@@ -186,32 +186,32 @@ public class PensionCalculatorService {
             return null; // Already meets expectations
         }
 
-        double multiplier = expectedPension / currentPension;
+        var multiplier = expectedPension / currentPension;
         return request.grossSalary() * multiplier;
     }
 
     private List<AccountProgression> buildAccountProgression(PensionRequest request) {
         List<AccountProgression> progression = new ArrayList<>();
-        double balanceNominal = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
-        double currentSalary = request.grossSalary();
+        var balanceNominal = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
+        var currentSalary = request.grossSalary();
 
-        int avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
-        double workDaysInYear = 250.0;
+        var avgSickDays = request.sex().equalsIgnoreCase("male") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
+        var workDaysInYear = 250.0;
 
-        for (int year = request.startYear(); year < request.retirementYear(); year++) {
-            double yearlyContribution = currentSalary * CONTRIBUTION_RATE;
+        for (var year = request.startYear(); year < request.retirementYear(); year++) {
+            var yearlyContribution = currentSalary * CONTRIBUTION_RATE;
 
             if (request.includeSickLeave()) {
-                double sickLeaveDaysFraction = avgSickDays / workDaysInYear;
-                double sickLeaveReduction = yearlyContribution * sickLeaveDaysFraction * SICK_LEAVE_REDUCTION;
+                var sickLeaveDaysFraction = avgSickDays / workDaysInYear;
+                var sickLeaveReduction = yearlyContribution * sickLeaveDaysFraction * SICK_LEAVE_REDUCTION;
                 yearlyContribution -= sickLeaveReduction;
             }
 
             balanceNominal += yearlyContribution;
 
             // Calculate real balance
-            double cumulativeInflation = forecastDataService.getCumulativeInflation(2025, year);
-            double balanceReal = balanceNominal / cumulativeInflation;
+            var cumulativeInflation = forecastDataService.getCumulativeInflation(2025, year);
+            var balanceReal = balanceNominal / cumulativeInflation;
 
             progression.add(AccountProgression.builder()
                     .year(year)

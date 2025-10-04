@@ -15,17 +15,17 @@ public class ForecastDataService {
 
     static {
         // Initialize with sample data - 3% wage growth
-        for (int year = 2025; year <= 2100; year++) {
+        for (var year = 2025; year <= 2100; year++) {
             WAGE_GROWTH.put(year, 0.03);
         }
 
         // Initialize with sample data - 2.5% inflation
-        for (int year = 2025; year <= 2100; year++) {
+        for (var year = 2025; year <= 2100; year++) {
             INFLATION_RATE.put(year, 0.025);
         }
 
         // Initialize with sample data - average pension (simplified, constant value)
-        for (int year = 2025; year <= 2100; year++) {
+        for (var year = 2025; year <= 2100; year++) {
             AVG_PENSION.put(year, 3500.0);
         }
 
@@ -51,16 +51,16 @@ public class ForecastDataService {
     }
 
     public double getCumulativeInflation(int fromYear, int toYear) {
-        double cumulative = 1.0;
-        for (int year = fromYear; year < toYear; year++) {
+        var cumulative = 1.0;
+        for (var year = fromYear; year < toYear; year++) {
             cumulative *= (1 + getInflationRate(year));
         }
         return cumulative;
     }
 
     public double getCumulativeWageGrowth(int fromYear, int toYear) {
-        double cumulative = 1.0;
-        for (int year = fromYear; year < toYear; year++) {
+        var cumulative = 1.0;
+        for (var year = fromYear; year < toYear; year++) {
             cumulative *= (1 + getWageGrowth(year));
         }
         return cumulative;
