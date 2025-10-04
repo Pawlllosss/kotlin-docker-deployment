@@ -78,9 +78,6 @@ public class PensionCalculatorService {
     }
 
     private PensionDetails calculateRealPension(PensionRequest request, PensionDetails nominalPensionDetails, double accountBalanceWithSickLeave) {
-        // Get life expectancy
-        double lifeExpectancyMonths = forecastDataService.getLifeExpectancyMonths(request.retirementYear(), request.sex());
-
         // Calculate cumulative inflation from 2025 to retirement year
         var cumulativeInflation = forecastDataService.getCumulativeInflation(2025, request.retirementYear());
 
@@ -135,7 +132,7 @@ public class PensionCalculatorService {
             balance += yearlyContribution;
 
             // Apply wage growth for next year
-            currentSalary *= (1 + forecastDataService.getWageGrowth(year));
+            currentSalary *= (forecastDataService.getWageGrowth(year));
         }
 
         return balance;
@@ -144,7 +141,7 @@ public class PensionCalculatorService {
     private double calculateFinalSalary(PensionRequest request) {
         var salary = request.grossSalary();
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
-            salary *= (1 + forecastDataService.getWageGrowth(year));
+            salary *= (forecastDataService.getWageGrowth(year));
         }
         return salary;
     }
@@ -176,7 +173,7 @@ public class PensionCalculatorService {
 
         for (var year = request.retirementYear(); year < request.retirementYear() + delayYears; year++) {
             balance += salary * CONTRIBUTION_RATE;
-            salary *= (1 + forecastDataService.getWageGrowth(year));
+            salary *= (forecastDataService.getWageGrowth(year));
         }
 
         return balance;
@@ -244,7 +241,7 @@ public class PensionCalculatorService {
                     .build());
 
             // Apply wage growth for next year
-            currentSalary *= (1 + forecastDataService.getWageGrowth(year));
+            currentSalary *= (forecastDataService.getWageGrowth(year));
         }
 
         return progression;

@@ -28,7 +28,7 @@ class PensionCalculatorServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(forecastDataService.getWageGrowth(anyInt())).thenReturn(0.03);
+        when(forecastDataService.getWageGrowth(anyInt())).thenReturn(1.03);
         when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenReturn(20.0 * 12);
         when(forecastDataService.getAveragePension(anyInt(), anyString())).thenReturn(3500.0);
         when(forecastDataService.getCumulativeInflation(anyInt(), anyInt())).thenReturn(1.5);
@@ -292,7 +292,7 @@ class PensionCalculatorServiceTest {
         PensionRequest request = new PensionRequest(
                 30,
                 "M",
-                50000.0,  // High salary
+                100000.0,  // Very high salary
                 2025,
                 2065,
                 false,
