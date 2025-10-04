@@ -30,7 +30,7 @@ class PensionCalculatorServiceTest {
     void setUp() {
         when(forecastDataService.getWageGrowth(anyInt())).thenReturn(1.03);
         when(forecastDataService.getLifeExpectancyMonths(anyInt(), anyString())).thenReturn(20.0 * 12);
-        when(forecastDataService.getAveragePension(anyInt(), anyString())).thenReturn(3500.0);
+        when(forecastDataService.getAveragePensionAfterValorization(anyInt(), anyString())).thenReturn(3500.0);
         when(forecastDataService.getCumulativeInflation(anyInt(), anyInt())).thenReturn(1.5);
     }
 
