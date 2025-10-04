@@ -26,6 +26,9 @@ dependencies {
 
     implementation("software.amazon.awssdk:dynamodb:2.34.0")
     implementation("software.amazon.awssdk:dynamodb-enhanced:2.34.0")
+
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 }
 
 tasks.withType<Test> {
