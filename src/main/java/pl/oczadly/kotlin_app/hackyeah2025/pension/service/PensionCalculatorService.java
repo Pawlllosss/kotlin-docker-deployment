@@ -125,9 +125,7 @@ public class PensionCalculatorService {
         var workDaysInYear = 250.0; // Approximate working days TODO: parameterize it
 
         for (var year = request.startYear(); year < request.retirementYear(); year++) {
-            // TODO use forecastDataService:
-//            Double valorizationRate = forecastDataService.getValorizationRate(year);
-            Double valorizationRate = 1.025;
+            var valorizationRate = forecastDataService.getValorizationRate(year);
             balance *= valorizationRate;
             var yearlyContribution = currentSalary * 12 * CONTRIBUTION_RATE;
 
@@ -237,14 +235,16 @@ public class PensionCalculatorService {
     private List<AccountProgression> buildAccountProgression(PensionRequest request) {
         List<AccountProgression> progression = new ArrayList<>();
         var balanceNominal = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
+        var balanceReal = request.currentAccountBalance() != null ? request.currentAccountBalance() : 0.0;
         var currentSalary = request.grossSalary();
 
         var avgSickDays = request.sex().equalsIgnoreCase("M") ? AVG_SICK_DAYS_MALE : AVG_SICK_DAYS_FEMALE;
         var workDaysInYear = 250.0;
 
-        for (var year = request.startYear(); year < request.retirementYear(); year++) {
-            Double valorizationRate = forecastDataService.getValorizationRate(year);
+        for (int year = request.startYear(); year < request.retirementYear(); year++) {
+            double valorizationRate = forecastDataService.getValorizationRate(year);
             balanceNominal *= valorizationRate;
+            balanceReal *= valorizationRate;
 
             var yearlyContribution = currentSalary * 12 * CONTRIBUTION_RATE;
 
@@ -257,8 +257,8 @@ public class PensionCalculatorService {
             balanceNominal += yearlyContribution;
 
             // Calculate real balance
-            var cumulativeInflation = forecastDataService.getCumulativeInflation(2025, year);
-            var balanceReal = balanceNominal / cumulativeInflation;
+            balanceReal += yearlyContribution;
+            balanceReal /= forecastDataService.getInflationRate(year);
 
             progression.add(AccountProgression.builder()
                     .year(year)

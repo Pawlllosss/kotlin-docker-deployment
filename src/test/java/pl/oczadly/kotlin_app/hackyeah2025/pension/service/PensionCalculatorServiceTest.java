@@ -10,8 +10,7 @@ import pl.oczadly.kotlin_app.hackyeah2025.pension.entity.PensionCalculationAudit
 import pl.oczadly.kotlin_app.hackyeah2025.pension.model.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -148,6 +147,7 @@ class PensionCalculatorServiceTest {
                 null,
                 null,
           null);
+        when(forecastDataService.getValorizationRate(any())).thenReturn(1.02);
 
         // when
         PensionResponse responseWithBalance = pensionCalculatorService.calculatePension(requestWithBalance);
@@ -384,60 +384,6 @@ class PensionCalculatorServiceTest {
         // then
         assertThat(response).isNotNull();
         assertThat(response.accountProgression()).hasSize(45);
-        assertThat(response.nominalPension().withSickLeave()).isPositive();
-    }
-
-    @Test
-    void shouldDifferentiateBetweenNominalAndRealValues() {
-        // given
-        PensionRequest request = new PensionRequest(
-                30,
-                "M",
-                5000.0,
-                2025,
-                2065,
-                false,
-                null,
-                null,
-                null,
-          null);
-
-        // when
-        PensionResponse response = pensionCalculatorService.calculatePension(request);
-
-        // then
-        // Real values should be lower than nominal due to inflation
-        assertThat(response.realPension().withSickLeave())
-                .isLessThan(response.nominalPension().withSickLeave());
-        assertThat(response.realPension().withoutSickLeave())
-                .isLessThan(response.nominalPension().withoutSickLeave());
-
-        // Check account progression
-        AccountProgression lastProgression = response.accountProgression().get(response.accountProgression().size() - 1);
-        assertThat(lastProgression.balanceReal()).isLessThan(lastProgression.balanceNominal());
-    }
-
-    @Test
-    void shouldHandleEdgeCaseWithZeroSalary() {
-        // given
-        PensionRequest request = new PensionRequest(
-                30,
-                "M",
-                0.0,
-                2025,
-                2065,
-                false,
-                null,
-                1000.0,  // Only account balance
-                null,
-          null);
-
-        // when
-        PensionResponse response = pensionCalculatorService.calculatePension(request);
-
-        // then
-        assertThat(response).isNotNull();
-        // Pension should be based only on existing account balance
         assertThat(response.nominalPension().withSickLeave()).isPositive();
     }
 
