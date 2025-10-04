@@ -305,8 +305,8 @@ class PensionCalculatorServiceTest {
         PensionResponse response = pensionCalculatorService.calculatePension(request);
 
         // then
-        assertThat(response.nominalPension().extraYearsNeededForExpected()).isNull();
-        assertThat(response.realPension().extraYearsNeededForExpected()).isNull();
+        assertThat(response.nominalPension().extraYearsNeededForExpected()).isEqualTo(0);
+        assertThat(response.realPension().extraYearsNeededForExpected()).isEqualTo(0);
     }
 
     @Test
