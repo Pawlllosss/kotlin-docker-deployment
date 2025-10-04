@@ -7,7 +7,7 @@ public record PensionRequest(
     Integer startYear,
     Integer retirementYear,
     boolean includeSickLeave,
-    Integer averageSickDaysPerYear,
+    Integer avgSickDaysPerYear,
     Double currentAccountBalance,
     Double expectedPension,
     String zipCode) {}

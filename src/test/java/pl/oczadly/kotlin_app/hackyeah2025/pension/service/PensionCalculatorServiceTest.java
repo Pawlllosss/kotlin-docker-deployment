@@ -69,7 +69,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 true,
-                null,
+                10,
                 null,
                 5000.0,
           null);
@@ -95,7 +95,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 true,
-                null,
+                35,
                 null,
                 5000.0,
           null);
@@ -107,7 +107,7 @@ class PensionCalculatorServiceTest {
                 2025,
                 2065,
                 true,
-                null,
+                32,
                 null,
                 5000.0,
           null);
