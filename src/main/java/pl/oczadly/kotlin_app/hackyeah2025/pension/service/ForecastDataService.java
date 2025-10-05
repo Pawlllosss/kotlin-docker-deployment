@@ -22,7 +22,7 @@ public class ForecastDataService {
         this.valorizationRate = new HashMap<>();
         this.lifeExpectancyAfterRetirement = Map.of(
                 "M", 19.0,
-                "F", 24.0
+                "F", 22.0
         );
         initializeWageGrowth();
         initializeInflationRate();
