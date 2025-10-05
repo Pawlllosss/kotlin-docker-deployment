@@ -29,7 +29,7 @@ public class ForecastDataService {
         initializeValorizationRate();
 
         for (var year = 2025; year <= 2100; year++) {
-            averagePension.put(year, Map.of("M", 4000.0, "F", 3000.0));
+            averagePension.put(year, Map.of("M", 4979.0, "F", 3422.0));
         }
 
     }
