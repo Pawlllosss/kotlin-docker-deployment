@@ -15,7 +15,7 @@ public class PensionCalculationAuditingRepository {
         // Mock data entry 1: Young professional, male, starting career
         db.put(UUID.randomUUID(), new PensionCalculationAuditing(
                 LocalDateTime.now(),
-                new PensionRequest(25, "M", 6000.0, 2025, 2060, false, null, null, null, null),
+                new PensionRequest(25, "M", 6000.0, 2025, 2060, false, null, null, null, "31-800"),
                 PensionResponse.builder()
                         .nominalPension(PensionDetails.builder()
                                 .withSickLeave(4500.0)
@@ -44,7 +44,7 @@ public class PensionCalculationAuditingRepository {
         // Mock data entry 2: Mid-career female with sick leave
         db.put(UUID.randomUUID(), new PensionCalculationAuditing(
                 LocalDateTime.now(),
-                new PensionRequest(40, "F", 8000.0, 2010, 2040, true, 32, 50000.0, 5000.0, null),
+                new PensionRequest(40, "F", 8000.0, 2010, 2040, true, 32, 50000.0, 5000.0, "41-700"),
                 PensionResponse.builder()
                         .nominalPension(PensionDetails.builder()
                                 .withSickLeave(6200.0)
@@ -81,7 +81,7 @@ public class PensionCalculationAuditingRepository {
         // Mock data entry 3: Senior professional male, high earner
         db.put(UUID.randomUUID(), new PensionCalculationAuditing(
                 LocalDateTime.now(),
-                new PensionRequest(55, "M", 15000.0, 2002, 2067, false, null, 200000.0, 10000.0, null),
+                new PensionRequest(55, "M", 15000.0, 2002, 2067, false, null, 200000.0, 10000.0, "31-860"),
                 PensionResponse.builder()
                         .nominalPension(PensionDetails.builder()
                                 .withSickLeave(12000.0)
